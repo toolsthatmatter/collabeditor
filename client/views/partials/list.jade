@@ -1,0 +1,42 @@
+script(type="text/ng-template" id="new-opinion-dialog")
+	#newOpinionDialog
+		.row
+			h1 Neues Gutachten
+		
+		.row
+			.col-md-4
+				.opinion-type
+					h2.type-name Typ 1
+					button.type-button.btn.btn-success(ng-click="closeThisDialog('1')") Anlegen
+			.col-md-4
+				.opinion-type
+					h2.type-name Typ 2
+					button.type-button.btn.btn-success(ng-click="closeThisDialog('2')") Anlegen
+			.col-md-4
+				.opinion-type
+					h2.type-name Typ 3
+					button.type-button.btn.btn-success(ng-click="closeThisDialog('3')") Anlegen
+
+		.row
+			.col-md-12
+				button.detailactionbutton.btn.btn-danger(ng-click="closeThisDialog()") Abbrechen
+
+.container-fluid
+	.row
+		.col-md-8.col-md-offset-2
+			h2 Gutachten
+			ul#doc-list.list-unstyled.form-horizontal
+				li(ng-repeat="doc in docsByKey") 
+					.form-group.doc-list-item
+						.col-md-3.control-label {{ doc.firstDoc.title }}
+						.col-md-3.control-label {{ docLastChangeDate(doc.firstDoc) | fromNow}}
+						.col-md-2.control-label
+							span.text-muted Versionen: 
+							select(ng-options="item.version for item in doc.docs", ng-model="doc.selectedVersion")
+						.col-md-2
+							button.margin-button.btn.btn-success(ng-click="openDocument(doc.selectedVersion)") Öffnen
+						.col-md-2
+							button.margin-button.btn.btn-danger(ng-click="deleteDocument(doc.selectedVersion)") Löschen
+			div
+				button.sidebar-button.btn.btn-primary(ng-click="newDocument()") Neues Gutachten
+

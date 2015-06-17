@@ -1,0 +1,41 @@
+basegrey = #bbb
+navbar-height = 50px
+socket-status-height = 4px
+footer-height = 80px
+
+body 
+	padding-top: navbar-height + socket-status-height
+	//padding-bottom: 80px
+	height: 100%
+
+// hide angular template elements while loading 
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak
+	display: none !important
+
+#socket-io-connection-status 
+	position: fixed
+	top: navbar-height
+	left: 0
+	right: 0
+	z-index: 4000
+	height: socket-status-height
+	
+.offline 
+	background-color: red
+.online 
+	background-color: green
+	
+.no-gutter // > [class*='col-']
+	padding-right: 0 !important
+	padding-left:  0 !important
+
+#mc-messages-wrapper
+	position: fixed
+	z-index: 5000
+	top: 20px
+	width: 700px
+	left: 50%
+	margin-left: -250px
+	
+
+@import 'stylus/*'

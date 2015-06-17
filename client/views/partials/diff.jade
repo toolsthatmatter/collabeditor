@@ -1,0 +1,10 @@
+.container-fluid
+	.row
+		.col-md-6
+			h2 Version {{ leftVersionDocument.version }} => {{ rightVersionDocument.version }}
+
+	.row(ng-repeat="chapter in leftVersionDocument.chapters")
+		.col-md-12
+			div Kapitel: {{ $index+1 }} : {{ chapter.title }}
+			pre.textdiff(processing-diff left-obj="cleanContent(leftVersionDocument.chapters[$index].content)" right-obj="cleanContent(rightVersionDocument.chapters[$index].content)")
+

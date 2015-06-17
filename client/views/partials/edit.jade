@@ -1,0 +1,101 @@
+script(type="text/ng-template" id="comment-input-dialog")
+	#commentInputDialog
+		.row
+			h1 Neuer Kommentar
+		.row
+			form(role="form")
+				label(for="commentText") Kommentar
+				textarea#commentText.form-control(rows="10", cols="50", ng-model="newCommentText")
+		.row
+			.col-md-6
+				button.detailactionbutton.btn.btn-success(ng-click="closeThisDialog(newCommentText)", ng-disabled="false") Ok
+			.col-md-6
+				button.detailactionbutton.btn.btn-danger(ng-click="closeThisDialog()") Abbrechen
+
+
+
+
+.container-fluid
+	#doc-info.row(ng-hide="fullscreen")
+		#doc-number.col-md-2
+			h1 {{ currentDocument.key }}
+			h4.text-muted Version: 
+				a.btn.btn-default.btn-xs(ng-click="previousVersion()", ng-disabled="!hasPreviousVersion")
+					span.glyphicon.glyphicon-backward
+				span  {{ currentDocument.version }} 
+				a.btn.btn-default.btn-xs(ng-click="nextVersion()", ng-disabled="!hasNextVersion")
+					span.glyphicon.glyphicon-forward
+
+		#doc-details.col-md-10
+			.col-md-8
+				h2 {{ currentDocument.patient.name }}
+				h3 geb. {{ currentDocument.patient.dob | date:'dd.MM.yyyy' }} ({{ currentDocument.patient.dob | fromNow }})
+
+				h2 {{ currentDocument.title }}
+
+			.col-md-4
+				div Hauptgutachter: {{ currentDocument.headAuthor }}
+				div.sidebar-button.btn-group(data-toggle="buttons")
+					label.state-radio.btn.btn-warning(type="button", ng-class="{'active' : currentDocument.state=='ONGOING'}")
+						input(type="radio", ng-model="currentDocument.state", value="ONGOING", ng-click="docStateChanged(value)")
+						| Offen
+					label.state-radio.btn.btn-success(type="button", ng-class="{'active' : currentDocument.state=='FINISHED'}")
+						input(type="radio", ng-model="currentDocument.state", value="FINISHED", ng-click="docStateChanged(value)")
+						| Fertig
+				.btn-group.doc-actions
+					a.sidebar-button-half.btn.btn-default(ng-href="/preview/{{currentDocument._id}}", target="_blank")
+						span.glyphicon.glyphicon-eye-open
+					a.sidebar-button-half.btn.btn-default(ng-href="/download/word/{{currentDocument._id}}", target="_blank")
+						span.glyphicon.glyphicon-file
+				.btn-group.doc-actions
+					button.sidebar-button-half.btn.btn-default(ng-click="newVersion(currentDocument)") New Version
+					button.sidebar-button-half.btn.btn-default(ng-click="diff(currentDocument)") Diff
+
+					//- a.sidebar-button.btn.btn-default(ng-href="/download/pdf/{{currentDocument._id}}", target="_blank") Download PDF
+					//- 	span.glyphicon.glyphicon-eye-open
+				//- div
+				//- 	button.sidebar-button.btn.btn-default(ng-click="saveDocument(currentDocument)") Save
+
+	#main-edit-area.row
+
+		#outline.col-md-2(ng-hide="fullscreen")
+			.big-font Gliederung
+			ul#chapter-list.list-unstyled(ui-sortable ng-model="currentDocument.chapters")
+				li.chapter-info(ng-repeat="chapter in currentDocument.chapters", ng-click="selectChapter(chapter)", ng-class="{'chapter-selected' : chapter.selected, 'chapter-finished' : chapter.state=='FINISHED', 'chapter-ongoing' : chapter.state=='ONGOING'}") 
+					div {{ chapter.title }}
+					div {{ chapter.author }}
+					//- div {{ chapter.version }}
+					div {{ chapter.lastChanged | fromNow }}
+					//- span.invisible-text .
+					//- div.pull-right.btn-group(data-toggle="buttons")
+					//- 	label.state-radio.btn.btn-warning.btn-xs(type="button", ng-class="{'active' : currentDocument.state=='ONGOING'}")
+					//- 		input(type="radio", ng-model="chapter.state", value="ONGOING", ng-click="docStateChanged(value)")
+					//- 		| Offen
+					//- 	label.state-radio.btn.btn-success.btn-xs(type="button", ng-class="{'active' : currentDocument.state=='FINISHED'}")
+					//- 		input(type="radio", ng-model="chapter.state", value="FINISHED", ng-click="docStateChanged(value)")
+					//- 		| Fertig
+
+			input.sidebar-button(type="text", ng-model="newChapterTitle", placeholder="Titel")
+			button#new-chapter.sidebar-button.btn.btn-default(ng-click="newChapter(currentDocument)") Neues Kapitel
+
+
+		#edit.no-gutter(ng-class="{'col-md-8': !fullscreen, 'col-md-12': fullscreen}")
+			text-angular(ng-model="currentChapter.content", ta-toolbar="[['h1','h2','h3'],['bold','italics','underline','ul','ol','undo','redo','clear'],['justifyLeft','justifyCenter','justifyRight','indent','outdent'],['addComment']]")
+
+
+		#sidebar.col-md-2(ng-hide="fullscreen")
+			.big-font Kommentare
+			ul#comments-list.list-unstyled
+				li.comment-info(ng-repeat="comment in currentChapter.comments", ng-click="selectComment(comment)", ng-class="{'comment-selected' : comment.selected}") 
+					div 
+						span {{ comment.author }}
+						span.glyphicon.glyphicon-remove.pull-right(ng-click="deleteComment(comment)")
+					div.inset
+						span.small {{ comment.text }}
+						span.glyphicon.glyphicon-pencil.pull-right(ng-click="editComment(comment)")
+					div.inset
+						span.invisible-text .
+						span.small.text-muted.pull-right {{ comment.created | fromNow}}
+			//- input.sidebar-button(type="text", ng-model="newCommentText", placeholder="Kommentar")
+			//- button.sidebar-button.btn.btn-default(ng-click="newComment(currentChapter)") Neuer Kommentar
+

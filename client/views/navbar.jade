@@ -1,0 +1,20 @@
+#socket-io-connection-status(ng-controller="socketStatusController", ng-class="{ online: socketIoConnected, offline: !socketIoConnected}", ng-cloak)
+
+nav#mainnav.navbar.navbar-inverse.navbar-fixed-top(role='navigation', ng-controller="navbarController", ng-cloak)
+	.container-fluid
+	// Brand and toggle get grouped for better mobile display
+	.navbar-header
+		button.navbar-toggle(type='button', data-toggle='collapse', data-target='#navbar-collapse-1')
+			span.sr-only toggle navigation
+			span.icon-bar
+			span.icon-bar
+			span.icon-bar
+		a.navbar-brand mo-edit
+	button#fullscreen.btn.btn-default.navbar-btn.navbar-right(ng-click="toggleFullscreen()", ng-show="showFullscreen") {{ fullscreenText }}
+
+	#navbar-collapse-1.collapse.navbar-collapse
+	
+		ul.nav.navbar-nav
+			li(ui-sref-active="active")
+				a(ui-sref='list')
+					span Gutachten-Übersicht 
